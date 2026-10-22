@@ -1,8 +1,11 @@
+// js/dashboard.js
+import './app.js'; // <--- ЭТА СТРОКА ВКЛЮЧАЕТ ТЕМУ И ПРОВЕРКУ АВТОРИЗАЦИИ!
 import { getAppeals } from './db.js';
 import { escapeHtml, formatDateShort } from './app.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   const data = await getAppeals();
+  
   document.getElementById('statTotal').textContent = data.length;
   document.getElementById('statNew').textContent = data.filter(a => a.status === 'new').length;
   document.getElementById('statProgress').textContent = data.filter(a => a.status === 'in_progress').length;
@@ -10,7 +13,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const recent = data.slice(0, 7);
   const tbody = document.getElementById('recentBody');
-  if (!recent.length) { tbody.innerHTML = `<tr><td colspan="5" class="empty-cell">Нет данных</td></tr>`; return; }
+  
+  if (!recent.length) { 
+    tbody.innerHTML = `<tr><td colspan="5" class="empty-cell">Нет данных</td></tr>`; 
+    return; 
+  }
 
   tbody.innerHTML = recent.map(item => `
     <tr>
