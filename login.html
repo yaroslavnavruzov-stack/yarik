@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Вход — ГосОбращения</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body style="display:flex; justify-content:center; align-items:center; height:100vh; background:var(--bg);">
+  <div class="card" style="width:100%; max-width:400px; padding:32px;">
+    <div style="text-align:center; margin-bottom:24px;">
+      <i class="bi bi-buildings-fill" style="font-size:40px; color:var(--primary);"></i>
+      <h2 style="margin-top:12px;">ГосОбращения</h2>
+    </div>
+    
+    <div style="display:flex; gap:10px; margin-bottom:20px;">
+      <button id="tabLogin" class="btn btn-primary" style="flex:1;">Вход</button>
+      <button id="tabRegister" class="btn btn-ghost" style="flex:1;">Регистрация</button>
+    </div>
+
+    <form id="authForm">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="email" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label>Пароль</label>
+        <input type="password" id="password" class="form-control" required minlength="6" />
+      </div>
+      <button type="submit" id="submitBtn" class="btn btn-primary" style="width:100%;">Войти</button>
+    </form>
+    <div id="msg" style="margin-top:16px; text-align:center; font-size:14px;"></div>
+  </div>
+
+  <script type="module">
+    import { login, register } from './js/auth.js';
+
+    let isLogin = true;
+    const form = document.getElementById('authForm');
+    const msg = document.getElementById('msg');
+    const btn = document.getElementById('submitBtn');
+
+    document.getElementById('tabLogin').onclick = () => { isLogin = true; btn.textContent = 'Войти'; };
+    document.getElementById('tabRegister').onclick = () => { isLogin = false; btn.textContent = 'Создать аккаунт'; };
+
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const pass = document.getElementById('password').value;
+      msg.textContent = 'Загрузка...'; msg.style.color = 'var(--text-muted)';
+      btn.disabled = true;
+
+      try {
+        if (isLogin) await login(email, pass);
+        else await register(email, pass);
+        msg.textContent = 'Успешно! Перенаправление...'; msg.style.color = 'green';
+        setTimeout(() => window.location.href = 'index.html', 500);
+      } catch (err) {
+        msg.textContent = 'Ошибка: ' + (err.code === 'auth/invalid-credential' ? 'Неверный логин или пароль' : err.message);
+        msg.style.color = 'var(--danger)';
+        btn.disabled = false;
+      }
+    };
+  </script>
+</body>
+</html>
