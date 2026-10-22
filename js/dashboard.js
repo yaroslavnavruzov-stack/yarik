@@ -1,30 +1,132 @@
 import './app.js';
-import { getAppeals } from './db.js';
-import { escapeHtml, formatDateShort } from './app.js';
+import { getDepartments, addDepartment, updateDepartment, deleteDepartment } from './db.js';
+import { escapeHtml, toast } from './app.js';
 
-document.addEventListener('DOMContentLoaded', async () => {
-  const data = await getAppeals();
-  
-  document.getElementById('statTotal').textContent = data.length;
-  document.getElementById('statNew').textContent = data.filter(a => a.status === 'new').length;
-  document.getElementById('statProgress').textContent = data.filter(a => a.status === 'in_progress').length;
-  document.getElementById('statResolved').textContent = data.filter(a => a.status === 'resolved').length;
+let allDepts = [];
+let currentId = null;
 
-  const recent = data.slice(0, 7);
-  const tbody = document.getElementById('recentBody');
+document.addEventListener('DOMContentLoaded', () => {
+  setupModal(); // 1. СНАЧАЛА вешаем клики на кнопки
+  load();       // 2. ПОТОМ грузим данные (кнопки уже работают)
+});
+
+async function load() {
+  try {
+    allDepts = await getDepartments();
+    renderTable();
+  } catch (error) {
+    console.error("Ошибка загрузки отделов:", error);
+    toast("Ошибка загрузки данных из Firebase", "error");
+  }
+}
+
+function renderTable() {
+  const tbody = document.getElementById('deptsBody');
+  if (!tbody) return;
   
-  if (!recent.length) { 
-    tbody.innerHTML = `<tr><td colspan="5" class="empty-cell">Нет данных</td></tr>`; 
+  if (!allDepts.length) { 
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-cell">Нет отделов</td></tr>`; 
     return; 
   }
-
-  tbody.innerHTML = recent.map(item => `
+  
+  tbody.innerHTML = allDepts.map(d => `
     <tr>
-      <td class="col-id">${escapeHtml(item.id.slice(0, 6))}</td>
-      <td class="col-subject">${escapeHtml(item.subject)}</td>
-      <td><span class="badge badge-category">${escapeHtml(window.I18n.t('status.' + item.category) || item.category)}</span></td>
-      <td>${formatDateShort(item.createdAt)}</td>
-      <td><span class="badge badge-${item.status === 'new' ? 'new' : item.status === 'in_progress' ? 'progress' : item.status === 'resolved' ? 'resolved' : 'rejected'}">${escapeHtml(window.I18n.t('status.' + item.status) || item.status)}</span></td>
+      <td>${d.id.slice(0, 6)}</td>
+      <td><b>${escapeHtml(d.name && d.name.ru ? d.name.ru : '—')}</b></td>
+      <td>${escapeHtml(d.head || '—')}</td>
+      <td>${escapeHtml(d.email || '—')}</td>
+      <td>${escapeHtml(d.phone || '—')}</td>
+      <td class="row-actions">
+        <button class="btn btn-ghost btn-sm" onclick="window.editDept('${d.id}')"><i class="bi bi-pencil"></i></button>
+        <button class="btn btn-ghost btn-sm btn-danger" onclick="window.delDept('${d.id}')"><i class="bi bi-trash"></i></button>
+      </td>
     </tr>
   `).join('');
-});
+}
+
+function setupModal() {
+  const overlay = document.getElementById('deptModal');
+  if (!overlay) return;
+
+  // Закрытие
+  window.closeDeptModal = () => overlay.classList.remove('active');
+  document.getElementById('deptModalClose').onclick = window.closeDeptModal;
+  document.getElementById('deptCancel').onclick = window.closeDeptModal;
+
+  // Открытие для НОВОГО
+  document.getElementById('addDeptBtn').onclick = () => {
+    currentId = null;
+    document.getElementById('deptModalTitle').textContent = 'Новый отдел';
+    document.getElementById('deptNameRu').value = ''; 
+    document.getElementById('deptNameKy').value = ''; 
+    document.getElementById('deptNameEn').value = '';
+    document.getElementById('deptHead').value = ''; 
+    document.getElementById('deptEmail').value = ''; 
+    document.getElementById('deptPhone').value = '';
+    
+    // ПРИНУДИТЕЛЬНО ПОКАЗЫВАЕМ ОКНО
+    overlay.classList.add('active'); 
+  };
+
+  // Открытие для РЕДАКТИРОВАНИЯ
+  window.editDept = (id) => {
+    const d = allDepts.find(x => x.id === id);
+    if (!d) return;
+    currentId = id;
+    document.getElementById('deptModalTitle').textContent = 'Редактировать отдел';
+    document.getElementById('deptNameRu').value = d.name && d.name.ru ? d.name.ru : ''; 
+    document.getElementById('deptNameKy').value = d.name && d.name.ky ? d.name.ky : ''; 
+    document.getElementById('deptNameEn').value = d.name && d.name.en ? d.name.en : '';
+    document.getElementById('deptHead').value = d.head || ''; 
+    document.getElementById('deptEmail').value = d.email || ''; 
+    document.getElementById('deptPhone').value = d.phone || '';
+    
+    // ПРИНУДИТЕЛЬНО ПОКАЗЫВАЕМ ОКНО
+    overlay.classList.add('active');
+  };
+
+  // Удаление
+  window.delDept = async (id) => {
+    if (confirm('Удалить этот отдел?')) { 
+      try {
+        await deleteDepartment(id); 
+        toast('Отдел удален', 'success'); 
+        await load(); 
+      } catch (e) {
+        alert("Ошибка удаления: " + e.message);
+      }
+    }
+  };
+
+  // СОХРАНЕНИЕ
+  document.getElementById('deptSave').onclick = async () => {
+    const data = {
+      name: { 
+        ru: document.getElementById('deptNameRu').value.trim(), 
+        ky: document.getElementById('deptNameKy').value.trim(), 
+        en: document.getElementById('deptNameEn').value.trim() 
+      },
+      head: document.getElementById('deptHead').value.trim(), 
+      email: document.getElementById('deptEmail').value.trim(), 
+      phone: document.getElementById('deptPhone').value.trim()
+    };
+    
+    if (!data.name.ru || !data.name.ky || !data.name.en) {
+      return toast('Заполните названия на всех трех языках', 'error');
+    }
+    
+    try {
+      if (currentId) {
+        await updateDepartment(currentId, data);
+      } else {
+        await addDepartment(data);
+      }
+      toast('Сохранено', 'success'); 
+      window.closeDeptModal(); 
+      await load();
+    } catch (error) {
+      console.error("Ошибка сохранения:", error);
+      alert("Ошибка при сохранении: " + error.message);
+    }
+  };
+}
