@@ -2,61 +2,119 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Вход — ГосОбращения</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="css/style.css" />
 </head>
-<body style="display:flex; justify-content:center; align-items:center; height:100vh; background:var(--bg);">
-  <div class="card" style="width:100%; max-width:400px; padding:32px;">
-    <div style="text-align:center; margin-bottom:24px;">
-      <i class="bi bi-buildings-fill" style="font-size:40px; color:var(--primary);"></i>
-      <h2 style="margin-top:12px;">ГосОбращения</h2>
+<body style="display:flex; justify-content:center; align-items:center; min-height:100vh; background:var(--bg);">
+
+  <div class="card" style="width:100%; max-width:420px; padding:36px; margin:20px;">
+    
+    <div style="text-align:center; margin-bottom:32px;">
+      <div style="display:inline-flex; align-items:center; justify-content:center; width:56px; height:56px; background:var(--primary-soft); border-radius:var(--radius-lg); color:var(--primary); margin-bottom:16px;">
+        <i class="bi bi-buildings-fill" style="font-size:28px;"></i>
+      </div>
+      <h2 style="margin:0 0 8px 0; font-size:24px;">ГосОбращения</h2>
+      <p style="margin:0; color:var(--text-muted); font-size:14px;">Войдите в систему для продолжения</p>
     </div>
     
-    <div style="display:flex; gap:10px; margin-bottom:20px;">
-      <button id="tabLogin" class="btn btn-primary" style="flex:1;">Вход</button>
-      <button id="tabRegister" class="btn btn-ghost" style="flex:1;">Регистрация</button>
+    <!-- Переключатель Вход/Регистрация -->
+    <div style="display:flex; gap:8px; margin-bottom:24px; background:var(--bg-alt); padding:4px; border-radius:var(--radius-md);">
+      <button id="tabLogin" class="btn" style="flex:1; background:var(--surface); box-shadow:var(--shadow-sm);">Вход</button>
+      <button id="tabRegister" class="btn" style="flex:1; background:transparent; box-shadow:none;">Регистрация</button>
     </div>
 
     <form id="authForm">
       <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="email" class="form-control" required />
+        <label for="email">Email</label>
+        <input type="email" id="email" class="form-control" placeholder="you@example.com" required />
       </div>
       <div class="form-group">
-        <label>Пароль</label>
-        <input type="password" id="password" class="form-control" required minlength="6" />
+        <label for="password">Пароль</label>
+        <input type="password" id="password" class="form-control" placeholder="Минимум 6 символов" required minlength="6" />
       </div>
-      <button type="submit" id="submitBtn" class="btn btn-primary" style="width:100%;">Войти</button>
+      
+      <button type="submit" id="submitBtn" class="btn btn-primary btn-lg" style="width:100%; margin-top:8px;">
+        Войти
+      </button>
     </form>
-    <div id="msg" style="margin-top:16px; text-align:center; font-size:14px;"></div>
+
+    <div id="msg" style="margin-top:16px; text-align:center; font-size:14px; font-weight:500;"></div>
   </div>
 
+  <!-- Подключаем логику -->
   <script type="module">
     import { login, register } from './js/auth.js';
 
-    let isLogin = true;
+    let isLoginMode = true;
     const form = document.getElementById('authForm');
     const msg = document.getElementById('msg');
     const btn = document.getElementById('submitBtn');
+    const tabLogin = document.getElementById('tabLogin');
+    const tabRegister = document.getElementById('tabRegister');
 
-    document.getElementById('tabLogin').onclick = () => { isLogin = true; btn.textContent = 'Войти'; };
-    document.getElementById('tabRegister').onclick = () => { isLogin = false; btn.textContent = 'Создать аккаунт'; };
+    // Переключение на Вход
+    tabLogin.onclick = () => {
+      isLoginMode = true;
+      btn.textContent = 'Войти';
+      tabLogin.style.background = 'var(--surface)';
+      tabLogin.style.boxShadow = 'var(--shadow-sm)';
+      tabRegister.style.background = 'transparent';
+      tabRegister.style.boxShadow = 'none';
+      msg.textContent = '';
+    };
 
+    // Переключение на Регистрацию
+    tabRegister.onclick = () => {
+      isLoginMode = false;
+      btn.textContent = 'Создать аккаунт';
+      tabRegister.style.background = 'var(--surface)';
+      tabRegister.style.boxShadow = 'var(--shadow-sm)';
+      tabLogin.style.background = 'transparent';
+      tabLogin.style.boxShadow = 'none';
+      msg.textContent = '';
+    };
+
+    // Отправка формы
     form.onsubmit = async (e) => {
       e.preventDefault();
-      const email = document.getElementById('email').value;
+      const email = document.getElementById('email').value.trim();
       const pass = document.getElementById('password').value;
-      msg.textContent = 'Загрузка...'; msg.style.color = 'var(--text-muted)';
+      
+      msg.textContent = 'Загрузка...'; 
+      msg.style.color = 'var(--text-muted)';
       btn.disabled = true;
 
       try {
-        if (isLogin) await login(email, pass);
-        else await register(email, pass);
-        msg.textContent = 'Успешно! Перенаправление...'; msg.style.color = 'green';
+        if (isLoginMode) {
+          await login(email, pass);
+        } else {
+          await register(email, pass);
+        }
+        
+        msg.textContent = 'Успешно! Перенаправление...'; 
+        msg.style.color = 'var(--success)';
+        
+        // Перенаправляем на главную через 0.5 секунды
         setTimeout(() => window.location.href = 'index.html', 500);
+        
       } catch (err) {
-        msg.textContent = 'Ошибка: ' + (err.code === 'auth/invalid-credential' ? 'Неверный логин или пароль' : err.message);
+        // Перевод ошибок Firebase на русский
+        let errorText = 'Ошибка: ' + err.message;
+        if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+          errorText = 'Неверный Email или пароль';
+        } else if (err.code === 'auth/email-already-in-use') {
+          errorText = 'Этот Email уже зарегистрирован';
+        } else if (err.code === 'auth/weak-password') {
+          errorText = 'Пароль слишком короткий (минимум 6 символов)';
+        } else if (err.code === 'auth/invalid-email') {
+          errorText = 'Некорректный формат Email';
+        }
+
+        msg.textContent = errorText;
         msg.style.color = 'var(--danger)';
         btn.disabled = false;
       }
