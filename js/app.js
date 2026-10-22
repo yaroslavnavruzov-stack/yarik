@@ -1,12 +1,7 @@
-// js/app.js
 import { logout, requireAuth } from './auth.js';
 
-// 1. Проверка авторизации (если не вошел - выкинет на login.html)
 requireAuth();
 
-// ==========================================
-// ТЕМА (СВЕТЛАЯ / ТЕМНАЯ)
-// ==========================================
 const THEME_KEY = 'citizen_appeals_theme';
 
 function initTheme() {
@@ -18,10 +13,8 @@ function initTheme() {
   const btn = document.getElementById('themeToggle');
   if (!btn) return;
 
-  // Устанавливаем иконку
   updateThemeIcon(btn);
 
-  // Клик по кнопке
   btn.addEventListener('click', () => {
     document.body.classList.toggle('dark-theme');
     const isDark = document.body.classList.contains('dark-theme');
@@ -37,9 +30,6 @@ function updateThemeIcon(btn) {
     : '<i class="bi bi-moon-stars-fill"></i>';
 }
 
-// ==========================================
-// ВЫХОД ИЗ СИСТЕМЫ
-// ==========================================
 function initLogout() {
   const btn = document.getElementById('logoutBtn');
   if (!btn) return;
@@ -52,9 +42,6 @@ function initLogout() {
   });
 }
 
-// ==========================================
-// УВЕДОМЛЕНИЯ (ТОСТЫ)
-// ==========================================
 export function toast(message, type = 'info', duration = 3200) {
   const container = document.getElementById('toastContainer');
   if (!container) return;
@@ -80,9 +67,6 @@ export function toast(message, type = 'info', duration = 3200) {
   }, duration);
 }
 
-// ==========================================
-// УТИЛИТЫ (ЭКРАНИРОВАНИЕ И ДАТЫ)
-// ==========================================
 export function escapeHtml(str) {
   if (str == null) return '';
   return String(str)
@@ -103,9 +87,6 @@ export function formatDateShort(ts) {
   return `${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.${d.getFullYear()}`;
 }
 
-// ==========================================
-// ЗАПУСК ПРИ ЗАГРУЗКЕ
-// ==========================================
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initLogout();

@@ -21,7 +21,6 @@
       <p style="margin:0; color:var(--text-muted); font-size:14px;">Войдите в систему для продолжения</p>
     </div>
     
-    <!-- Переключатель Вход/Регистрация -->
     <div style="display:flex; gap:8px; margin-bottom:24px; background:var(--bg-alt); padding:4px; border-radius:var(--radius-md);">
       <button id="tabLogin" class="btn" style="flex:1; background:var(--surface); box-shadow:var(--shadow-sm);">Вход</button>
       <button id="tabRegister" class="btn" style="flex:1; background:transparent; box-shadow:none;">Регистрация</button>
@@ -45,7 +44,6 @@
     <div id="msg" style="margin-top:16px; text-align:center; font-size:14px; font-weight:500;"></div>
   </div>
 
-  <!-- Подключаем логику -->
   <script type="module">
     import { login, register } from './js/auth.js';
 
@@ -56,7 +54,6 @@
     const tabLogin = document.getElementById('tabLogin');
     const tabRegister = document.getElementById('tabRegister');
 
-    // Переключение на Вход
     tabLogin.onclick = () => {
       isLoginMode = true;
       btn.textContent = 'Войти';
@@ -67,7 +64,6 @@
       msg.textContent = '';
     };
 
-    // Переключение на Регистрацию
     tabRegister.onclick = () => {
       isLoginMode = false;
       btn.textContent = 'Создать аккаунт';
@@ -78,7 +74,6 @@
       msg.textContent = '';
     };
 
-    // Отправка формы
     form.onsubmit = async (e) => {
       e.preventDefault();
       const email = document.getElementById('email').value.trim();
@@ -97,12 +92,9 @@
         
         msg.textContent = 'Успешно! Перенаправление...'; 
         msg.style.color = 'var(--success)';
-        
-        // Перенаправляем на главную через 0.5 секунды
         setTimeout(() => window.location.href = 'index.html', 500);
         
       } catch (err) {
-        // Перевод ошибок Firebase на русский
         let errorText = 'Ошибка: ' + err.message;
         if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
           errorText = 'Неверный Email или пароль';

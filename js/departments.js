@@ -1,5 +1,4 @@
-// js/departments.js
-import './app.js'; // ВАЖНО: запускает проверку авторизации и тему
+import './app.js';
 import { getDepartments, addDepartment, updateDepartment, deleteDepartment } from './db.js';
 import { escapeHtml, toast } from './app.js';
 
@@ -33,7 +32,7 @@ function renderTable() {
   tbody.innerHTML = allDepts.map(d => `
     <tr>
       <td>${d.id.slice(0, 6)}</td>
-      <td><b>${escapeHtml(d.name?.ru || '—')}</b></td>
+      <td><b>${escapeHtml(d.name && d.name.ru ? d.name.ru : '—')}</b></td>
       <td>${escapeHtml(d.head || '—')}</td>
       <td>${escapeHtml(d.email || '—')}</td>
       <td>${escapeHtml(d.phone || '—')}</td>
@@ -53,7 +52,6 @@ function setupModal() {
   document.getElementById('deptModalClose').onclick = window.closeDeptModal;
   document.getElementById('deptCancel').onclick = window.closeDeptModal;
 
-  // Открытие модалки для НОВОГО отдела
   document.getElementById('addDeptBtn').onclick = () => {
     currentId = null;
     document.getElementById('deptModalTitle').textContent = 'Новый отдел';
@@ -66,22 +64,20 @@ function setupModal() {
     overlay.classList.add('active');
   };
 
-  // Открытие модалки для РЕДАКТИРОВАНИЯ
   window.editDept = (id) => {
     const d = allDepts.find(x => x.id === id);
     if (!d) return;
     currentId = id;
     document.getElementById('deptModalTitle').textContent = 'Редактировать отдел';
-    document.getElementById('deptNameRu').value = d.name?.ru || ''; 
-    document.getElementById('deptNameKy').value = d.name?.ky || ''; 
-    document.getElementById('deptNameEn').value = d.name?.en || '';
+    document.getElementById('deptNameRu').value = d.name && d.name.ru ? d.name.ru : ''; 
+    document.getElementById('deptNameKy').value = d.name && d.name.ky ? d.name.ky : ''; 
+    document.getElementById('deptNameEn').value = d.name && d.name.en ? d.name.en : '';
     document.getElementById('deptHead').value = d.head || ''; 
     document.getElementById('deptEmail').value = d.email || ''; 
     document.getElementById('deptPhone').value = d.phone || '';
     overlay.classList.add('active');
   };
 
-  // Удаление
   window.delDept = async (id) => {
     if (confirm('Удалить этот отдел?')) { 
       try {
@@ -94,7 +90,6 @@ function setupModal() {
     }
   };
 
-  // СОХРАНЕНИЕ
   document.getElementById('deptSave').onclick = async () => {
     const data = {
       name: { 

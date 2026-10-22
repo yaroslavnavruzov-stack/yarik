@@ -1,15 +1,13 @@
-// js/create.js
+import './app.js';
 import { getDepartments, addAppeal } from './db.js';
 import { toast } from './app.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Заполняем выпадающий список КАТЕГОРИЙ
   const categories = ['housing', 'transport', 'healthcare', 'education', 'social', 'other'];
   const catSelect = document.getElementById('category');
   catSelect.innerHTML = `<option value="">— Выберите категорию —</option>` + 
     categories.map(key => `<option value="${key}">${window.I18n.t('status.' + key) || key}</option>`).join('');
 
-  // 2. Заполняем выпадающий список ОТДЕЛОВ из Firebase
   const deptSelect = document.getElementById('departmentId');
   try {
     const deps = await getDepartments();
@@ -24,11 +22,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     deptSelect.innerHTML = `<option value="">— Ошибка загрузки —</option>`;
   }
 
-  // 3. Обработка отправки формы
   document.getElementById('appealForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    // Очистка ошибок
     document.querySelectorAll('.error-text').forEach(el => el.textContent = '');
     document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));
 

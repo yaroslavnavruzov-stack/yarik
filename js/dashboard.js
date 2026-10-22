@@ -1,5 +1,4 @@
-// js/dashboard.js
-import './app.js'; // <--- ЭТА СТРОКА ВКЛЮЧАЕТ ТЕМУ И ПРОВЕРКУ АВТОРИЗАЦИИ!
+import './app.js';
 import { getAppeals } from './db.js';
 import { escapeHtml, formatDateShort } from './app.js';
 

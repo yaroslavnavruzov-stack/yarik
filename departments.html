@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Отделы</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Отделы</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -21,10 +23,11 @@
       <div class="header-tools">
         <select class="lang-select" id="langSelect"><option value="ru">Русский</option><option value="ky">Кыргызча</option><option value="en">English</option></select>
         <button class="theme-toggle" id="themeToggle"><i class="bi bi-moon-stars-fill"></i></button>
-        <button class="theme-toggle" id="logoutBtn"><i class="bi bi-box-arrow-right"></i></button>
+        <button class="theme-toggle" id="logoutBtn" title="Выйти"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
   </header>
+  
   <main class="container main-content">
     <section class="page-title-block">
       <div class="section-head">
@@ -32,16 +35,37 @@
         <button class="btn btn-primary" id="addDeptBtn"><i class="bi bi-plus-lg"></i><span data-i18n="depts.add_btn">Добавить</span></button>
       </div>
     </section>
+    
     <section class="table-wrapper">
       <table class="data-table">
-        <thead><tr><th data-i18n="depts.col_id">Код</th><th data-i18n="depts.col_name">Название</th><th data-i18n="depts.col_head">Руководитель</th><th data-i18n="depts.col_email">Email</th><th data-i18n="depts.col_phone">Телефон</th><th data-i18n="common.actions">Действия</th></tr></thead>
+        <thead>
+          <tr>
+            <th data-i18n="depts.col_id">Код</th>
+            <th data-i18n="depts.col_name">Название</th>
+            <th data-i18n="depts.col_head">Руководитель</th>
+            <th data-i18n="depts.col_email">Email</th>
+            <th data-i18n="depts.col_phone">Телефон</th>
+            <th data-i18n="common.actions">Действия</th>
+          </tr>
+        </thead>
         <tbody id="deptsBody"></tbody>
       </table>
     </section>
   </main>
+  
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2025 ГосОбращения</p>
+      <p>support@gos-appeals.ru</p>
+    </div>
+  </footer>
+
   <div class="modal-overlay" id="deptModal">
     <div class="modal">
-      <div class="modal-head"><h3 id="deptModalTitle">Отдел</h3><button class="modal-close" id="deptModalClose"><i class="bi bi-x-lg"></i></button></div>
+      <div class="modal-head">
+        <h3 id="deptModalTitle">Отдел</h3>
+        <button class="modal-close" id="deptModalClose"><i class="bi bi-x-lg"></i></button>
+      </div>
       <div class="modal-body">
         <div class="form-group"><label data-i18n="depts.name_ru">Имя (RU) *</label><input type="text" id="deptNameRu" class="form-control" /></div>
         <div class="form-group"><label data-i18n="depts.name_ky">Имя (KY) *</label><input type="text" id="deptNameKy" class="form-control" /></div>
@@ -51,15 +75,16 @@
         <div class="form-group"><label data-i18n="depts.phone">Телефон</label><input type="tel" id="deptPhone" class="form-control" /></div>
         <div class="error-text" id="deptError"></div>
       </div>
-      <div class="modal-foot"><button class="btn btn-ghost" id="deptCancel" data-i18n="common.cancel">Отмена</button><button class="btn btn-primary" id="deptSave" data-i18n="common.save">Сохранить</button></div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" id="deptCancel" data-i18n="common.cancel">Отмена</button>
+        <button class="btn btn-primary" id="deptSave" data-i18n="common.save">Сохранить</button>
+      </div>
     </div>
   </div>
+  
   <div class="toast-container" id="toastContainer"></div>
 
-  <script src="js/theme.js"></script>
   <script src="js/i18n.js"></script>
-  <script type="module" src="js/departments.js">
-    import { login, register } from './js/auth.js';
-  </script>
+  <script type="module" src="js/departments.js"></script>
 </body>
 </html>

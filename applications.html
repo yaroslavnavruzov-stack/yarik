@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Обращения</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Обращения</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -21,39 +23,66 @@
       <div class="header-tools">
         <select class="lang-select" id="langSelect"><option value="ru">Русский</option><option value="ky">Кыргызча</option><option value="en">English</option></select>
         <button class="theme-toggle" id="themeToggle"><i class="bi bi-moon-stars-fill"></i></button>
-        <button class="theme-toggle" id="logoutBtn"><i class="bi bi-box-arrow-right"></i></button>
+        <button class="theme-toggle" id="logoutBtn" title="Выйти"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
   </header>
+  
   <main class="container main-content">
     <section class="page-title-block"><h1 class="page-title" data-i18n="apps.title">Обращения</h1></section>
+    
     <section class="filters-bar">
       <input type="text" id="searchInput" class="form-control" data-i18n-placeholder="apps.search_ph" />
       <select id="statusFilter" class="form-control"></select>
       <select id="categoryFilter" class="form-control"></select>
       <button id="resetFilters" class="btn btn-ghost"><i class="bi bi-arrow-clockwise"></i><span data-i18n="common.reset">Сброс</span></button>
     </section>
+    
     <section class="table-wrapper">
       <table class="data-table">
-        <thead><tr><th data-i18n="apps.col_id">№</th><th data-i18n="apps.col_subject">Тема</th><th data-i18n="apps.col_applicant">Заявитель</th><th data-i18n="apps.col_category">Категория</th><th data-i18n="apps.col_date">Дата</th><th data-i18n="apps.col_status">Статус</th><th data-i18n="apps.col_actions">Действия</th></tr></thead>
-        <tbody id="applicationsBody"><tr><td colspan="7" class="empty-cell">Загрузка...</td></tr></tbody>
+        <thead>
+          <tr>
+            <th data-i18n="apps.col_id">№</th>
+            <th data-i18n="apps.col_subject">Тема</th>
+            <th data-i18n="apps.col_applicant">Заявитель</th>
+            <th data-i18n="apps.col_category">Категория</th>
+            <th data-i18n="apps.col_department">Отдел</th>
+            <th data-i18n="apps.col_date">Дата</th>
+            <th data-i18n="apps.col_status">Статус</th>
+            <th data-i18n="apps.col_actions">Действия</th>
+          </tr>
+        </thead>
+        <tbody id="applicationsBody"><tr><td colspan="8" class="empty-cell">Загрузка...</td></tr></tbody>
       </table>
     </section>
+    
     <div class="pagination" id="pagination"></div>
   </main>
+  
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2025 ГосОбращения</p>
+      <p>support@gos-appeals.ru</p>
+    </div>
+  </footer>
+
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
-      <div class="modal-head"><h3 id="modalTitle" data-i18n="apps.details">Детали</h3><button class="modal-close" id="modalClose"><i class="bi bi-x-lg"></i></button></div>
+      <div class="modal-head">
+        <h3 id="modalTitle" data-i18n="apps.details">Детали</h3>
+        <button class="modal-close" id="modalClose"><i class="bi bi-x-lg"></i></button>
+      </div>
       <div class="modal-body" id="modalBody"></div>
-      <div class="modal-foot"><button class="btn btn-ghost" id="modalCancel" data-i18n="common.close">Закрыть</button><button class="btn btn-primary" id="modalSave" data-i18n="common.save">Сохранить</button></div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" id="modalCancel" data-i18n="common.close">Закрыть</button>
+        <button class="btn btn-primary" id="modalSave" data-i18n="common.save">Сохранить</button>
+      </div>
     </div>
   </div>
-  <div class="toast-container" id="toastContainer"></div>
   
-  <script src="js/theme.js"></script>
+  <div class="toast-container" id="toastContainer"></div>
+
   <script src="js/i18n.js"></script>
-  <script type="module" src="js/applications.js">
-    import { login, register } from './js/auth.js';
-  </script>
+  <script type="module" src="js/applications.js"></script>
 </body>
 </html>

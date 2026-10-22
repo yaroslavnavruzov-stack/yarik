@@ -1,11 +1,7 @@
-// js/firebase-config.js
-
-// 1. Подключаем Firebase через CDN (ссылки), а не через npm
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-// 2. Твои личные ключи (я взял их из твоего сообщения)
 const firebaseConfig = {
   apiKey: "AIzaSyDj9z05dlINR9gyeG2tyOdbaiotHFqNN98",
   authDomain: "yarik-c747f.firebaseapp.com",
@@ -16,7 +12,6 @@ const firebaseConfig = {
   measurementId: "G-SN1KNM9JGL"
 };
 
-// 3. Инициализируем приложение и сервисы
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);

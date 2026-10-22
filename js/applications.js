@@ -1,12 +1,17 @@
-import { getAppeals, updateAppealStatus, deleteAppeal } from './db.js';
+import './app.js';
+import { getAppeals, updateAppealStatus, getDepartments } from './db.js';
 import { escapeHtml, formatDateShort, toast } from './app.js';
 
 let allData = [];
 let filteredData = [];
+let deptsMap = {};
 let currentPage = 1;
 const PER_PAGE = 6;
 
 document.addEventListener('DOMContentLoaded', async () => {
+  const deps = await getDepartments();
+  deps.forEach(d => deptsMap[d.id] = d.name.ru);
+
   allData = await getAppeals();
   filteredData = [...allData];
   render();
@@ -31,7 +36,7 @@ function render() {
       <td class="col-subject">${escapeHtml(item.subject)}<small>${escapeHtml(item.description.slice(0, 50))}...</small></td>
       <td>${escapeHtml(item.fullName)}</td>
       <td><span class="badge badge-category">${escapeHtml(window.I18n.t('status.' + item.category) || item.category)}</span></td>
-      <td>${escapeHtml(item.departmentId || '—')}</td>
+      <td>${escapeHtml(deptsMap[item.departmentId] || '—')}</td>
       <td>${formatDateShort(item.createdAt)}</td>
       <td><span class="badge badge-${item.status === 'new' ? 'new' : item.status === 'in_progress' ? 'progress' : item.status === 'resolved' ? 'resolved' : 'rejected'}">${escapeHtml(window.I18n.t('status.' + item.status) || item.status)}</span></td>
       <td class="row-actions">
@@ -125,7 +130,7 @@ function setupModal() {
     await updateAppealStatus(currentId, newStatus);
     toast('Статус обновлен', 'success');
     allData = await getAppeals();
-    filteredData = allData; // Сбрасываем фильтры для простоты
+    filteredData = allData;
     render();
     window.closeModal();
   };

@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Подать обращение</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Подать обращение</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -21,12 +23,14 @@
       <div class="header-tools">
         <select class="lang-select" id="langSelect"><option value="ru">Русский</option><option value="ky">Кыргызча</option><option value="en">English</option></select>
         <button class="theme-toggle" id="themeToggle"><i class="bi bi-moon-stars-fill"></i></button>
-        <button class="theme-toggle" id="logoutBtn"><i class="bi bi-box-arrow-right"></i></button>
+        <button class="theme-toggle" id="logoutBtn" title="Выйти"><i class="bi bi-box-arrow-right"></i></button>
       </div>
     </div>
   </header>
+  
   <main class="container main-content">
-    <section class="page-title-block"><h1 class="page-title" data-i18n="create.title">Подать</h1></section>
+    <section class="page-title-block"><h1 class="page-title" data-i18n="create.title">Подать обращение</h1></section>
+    
     <div class="form-layout">
       <form id="appealForm" class="card form-card" novalidate>
         <div class="form-row">
@@ -46,15 +50,29 @@
           <button type="submit" class="btn btn-primary" data-i18n="create.submit">Отправить</button>
         </div>
       </form>
-      <aside class="card info-card"><h3 class="info-title"><i class="bi bi-info-circle-fill"></i><span data-i18n="create.info_title">Порядок</span></h3><ol class="info-list"><li data-i18n="create.info_1"></li><li data-i18n="create.info_2"></li><li data-i18n="create.info_3"></li><li data-i18n="create.info_4"></li></ol></aside>
+      
+      <aside class="card info-card">
+        <h3 class="info-title"><i class="bi bi-info-circle-fill"></i><span data-i18n="create.info_title">Порядок</span></h3>
+        <ol class="info-list">
+          <li data-i18n="create.info_1"></li>
+          <li data-i18n="create.info_2"></li>
+          <li data-i18n="create.info_3"></li>
+          <li data-i18n="create.info_4"></li>
+        </ol>
+      </aside>
     </div>
   </main>
+  
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2025 ГосОбращения</p>
+      <p>support@gos-appeals.ru</p>
+    </div>
+  </footer>
+
   <div class="toast-container" id="toastContainer"></div>
 
-  <script src="js/theme.js"></script>
   <script src="js/i18n.js"></script>
-  <script type="module" src="js/create.js">
-    import { login, register } from './js/auth.js';
-  </script>
+  <script type="module" src="js/create.js"></script>
 </body>
 </html>

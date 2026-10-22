@@ -1,3 +1,4 @@
+import './app.js';
 import { getAppeals } from './db.js';
 import { escapeHtml } from './app.js';
 
